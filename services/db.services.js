@@ -19,12 +19,10 @@ mongoose.connect(dbConfig.url, options)
         process.exit(1);
     });
 
-// Handle connection errors after initial connection
 mongoose.connection.on('error', err => {
     console.error('Database connection error:', err);
 });
 
-// Optionally, listen for other events like disconnection
 mongoose.connection.on('disconnected', () => {
     console.warn('Database connection lost. Attempting to reconnect...');
 });

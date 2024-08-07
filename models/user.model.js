@@ -26,8 +26,16 @@ const schema = new mongoose.Schema({
         required: true,
         default: '',
         unique: true
+    },
+    password:{
+        type:String,
+        required:true,
+    },
+    userType:{
+        type:String,
+        required:true,
+        default:'user',
     }
-
 });
 
 const User = new mongoose.model('Users',schema);
