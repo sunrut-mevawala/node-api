@@ -1,7 +1,9 @@
 const { query } = require('express');
+const jwt = require("jsonwebtoken");
 const { findOne } = require('../models/post.model');
 const userModel = require('../models/user.model');
 const {v4: uuid4} = require('uuid');
+const bcrypt = require ("bcrypt");
 
 
 exports.userLogin = async(req, res) => {
@@ -23,19 +25,22 @@ exports.userLogin = async(req, res) => {
         if(!findUser){
             return res.status(200).send({status:false, message: 'User is not registered'});
         }
-        
-        if(findUser.password === reqBody.password){
-            const user = {
-                id:findUser.id,
-                userName: `${findUser.firstName}-${findUser.lastName}`,
-                email: findUser.email,
-                phone: findUser.phone,
-                userType: findUser.userType
-            }
-            return res.status(200).send({status:true, user: user});
-        }else{
+
+        const validPassword = await bcrypt.compare(reqBody.password,findUser.password);
+
+        if(!validPassword) {
             return res.status(200).send({status:false, message: 'User credentials are not matched!'});
         }
+        const user = {
+            id:findUser.id,
+            userName: `${findUser.firstName}-${findUser.lastName}`,
+            email: findUser.email,
+            phone: findUser.phone,
+            userType: findUser.userType
+    };
+        const token = jwt.sign(user, "MyNameIsSunrut007");
+        await userModel.findOneAndUpdate({id:findUser.id},{token: token});
+        return res.status(200).send({status:true, user: {user:user,token:token}});
     } catch (error) {
         return res.status(400).send({status: false, message: error.message});
     }
@@ -48,13 +53,15 @@ exports.userRegistration = async(req,res) =>{
         return res.status(400).send({status:false, message:"Inputs can not be empty." })    
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(reqBody.password, salt);
     const user = new userModel({
         id: uuid4(),
         firstName : reqBody.firstName,
         lastName : reqBody.lastName,
         email: reqBody.email,
         phone: reqBody.phone,
-        password: reqBody.password
+        password: hashedPassword
     });
 
     try{

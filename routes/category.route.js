@@ -1,5 +1,5 @@
 const express = require('express');
-const postController = require('../controller/post.controller'); 
+const categoryController = require('../controller/categories.controller'); 
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
@@ -21,9 +21,9 @@ const upload = multer({ storage: storage });
 // Route to handle formData
 
 
-router.get('/getAllPosts',postController.getAllPosts);
-router.post('/insertPost',upload.single('file'),postController.insertPost);
-router.put('/updatepost/:id' ,upload.single('file'), postController.updatePost);
-router.delete('/deletepost/:id', postController.deletePost);
+router.get('/getAllCategories', categoryController.getAllCategories);
+router.post('/insertCategory', categoryController.insertCategory);
+router.put('/updateCategory/:id', categoryController.updateCategory);
+router.delete('/deleteCategory/:id', categoryController.deleteCategory);
 
 module.exports = router;
