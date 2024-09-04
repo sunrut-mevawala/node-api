@@ -14,7 +14,6 @@ exports.insertPost = async (req, res) => {
   const reqBody = req.body;
   const file = req.file;
   
-  console.log('Request Object',req.file);
   if (!reqBody.userName || !reqBody.userId || !reqBody.postTitle || !reqBody.postDescription) {
     return res.status(400).send({ status: false, message: "Value can not be Empty" });
   }
@@ -41,12 +40,13 @@ exports.updatePost = async (req, res) => {
   const reqParams = req.params;
   const reqBody = req.body;
   const pid = reqParams.id;
+  const file = req.file;
 
   if (!pid) {
     return res.status(400).send({ status: false, message: 'Post id is required' });
   }
 
-  if (!reqBody.userName || !reqBody.userId || !reqBody.postTitle || !reqBody.postDescription || !reqBody.imageUrl) {
+  if (!reqBody.userName || !reqBody.userId || !reqBody.postTitle || !reqBody.postDescription) {
     return res.status(400).send({ status: false, message: "Value can not be Empty" });
   }
 
@@ -56,9 +56,9 @@ exports.updatePost = async (req, res) => {
     postTitle: reqBody.postTitle,
     postDescription: reqBody.postDescription,
     updateDate: Date.now(),
-    imageUrl: reqBody.imageUrl,
+    imageUrl: file ? file.filename : reqBody.imageUrl  
   };
-
+  
   try {
     const postUpdate = await postModel.findOneAndUpdate({ id: pid }, updateData, { new: true });
     if (!postUpdate) {
