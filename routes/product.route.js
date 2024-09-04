@@ -1,5 +1,5 @@
 const express = require('express');
-const postController = require('../controller/post.controller'); 
+const productController = require('../controller/product.controller'); 
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
@@ -21,9 +21,9 @@ const upload = multer({ storage: storage });
 // Route to handle formData
 
 
-router.get('/getAllPosts',postController.getAllPosts);
-router.post('/insertPost',upload.single('file'),postController.insertPost);
-router.put('/updatepost/:id' ,upload.single('file'), postController.updatePost);
-router.delete('/deletepost/:id', postController.deletePost);
+router.get('/getAllProducts',productController.getAllProducts);
+router.post('/insertProduct',upload.array('files',10),productController.insertProduct);
+router.put('/updateProduct/:id' ,upload.array('files',10), productController.updateProduct);
+router.delete('/deleteProduct/:id', productController.deleteProduct);
 
 module.exports = router;
