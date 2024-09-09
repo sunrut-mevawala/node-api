@@ -31,7 +31,7 @@ exports.insertProduct = async (req, res) => {
         id: uuidv4(),
         productTitle: reqBody.productTitle,
         productDescription: reqBody.productDescription,
-        CategoryId: reqBody.CategoryId,
+        categoryId: reqBody.categoryId,
         createdDate: Date.now(),
         price: reqBody.price,
         discountPercentage: reqBody.discountPercentage,

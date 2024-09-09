@@ -11,7 +11,7 @@ const categorySchema = new Schema({
     type: String,
     required: true,
   },
-  parentCategoryid: {
+  parentCategoryId: {
     type: String,
     default:"",
   },

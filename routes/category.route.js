@@ -3,6 +3,7 @@ const categoryController = require('../controller/categories.controller');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const verifyToken = require('../middleware/authMiddleware');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -21,7 +22,7 @@ const upload = multer({ storage: storage });
 // Route to handle formData
 
 
-router.get('/getAllCategories', categoryController.getAllCategories);
+router.get('/getAllCategories',verifyToken, categoryController.getAllCategories);
 router.post('/insertCategory', categoryController.insertCategory);
 router.put('/updateCategory/:id', categoryController.updateCategory);
 router.delete('/deleteCategory/:id', categoryController.deleteCategory);
