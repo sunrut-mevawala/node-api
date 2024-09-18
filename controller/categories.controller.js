@@ -54,7 +54,7 @@ exports.updateCategory = async (req, res) => {
   };
   
   try {
-    const categoryUpdate = await categoryModel.findOneAndUpdate({ id: pid }, updateData, { new: true });
+    const categoryUpdate = await categoryModel.findOneAndUpdate({ id: cid }, updateData, { new: true });
     if (!categoryUpdate) {
       return res.status(404).send({ status: false, message: 'Category Not Found' });
     }
@@ -73,7 +73,7 @@ exports.deleteCategory = async (req, res) => {
   }
 
   try {
-    const categoryDelete = await postModel.findOneAndDelete({ id: pid });
+    const categoryDelete = await categoryModel.findOneAndDelete({ id: cid });
     if (!categoryDelete) {
       return res.status(404).send({ status: false, message: 'Category Not Found' });
     }
