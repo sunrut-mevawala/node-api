@@ -17,7 +17,7 @@ exports.getAllCategories = async(req,res)=>{
 
 exports.insertCategory = async (req, res) => {
   const reqBody = req.body;
-  
+  console.log(reqBody);
   if (!reqBody.categoryName) {
     return res.status(400).send({ status: false, message: "Value can not be Empty" });
   }
@@ -25,11 +25,11 @@ exports.insertCategory = async (req, res) => {
   const newCategory = new categoryModel({
     id: uuidv4(),
     categoryName: reqBody.categoryName,
-    parentCategoryid: reqBody.parentCategoryid,
+    parentCategoryId: reqBody.parentCategoryId,
   });
 
   try {
-    await newCategory.save();
+    await newCategory.save({newCategory});
     return res.status(200).send({ status: true, message: 'Category Added successfully' });
   } catch (err) {
     return res.status(500).send({ status: false, message: err.message });
@@ -67,13 +67,13 @@ exports.updateCategory = async (req, res) => {
 exports.deleteCategory = async (req, res) => {
   const reqParams = req.params;
   const cid = reqParams.id;
-
+  console.log('delete');
   if (!cid) {
     return res.status(400).send({ status: false, message: 'Category id is required' });
   }
 
   try {
-    const categoryDelete = await postModel.findOneAndDelete({ id: pid });
+    const categoryDelete = await categoryModel.findOneAndDelete({ id: cid });
     if (!categoryDelete) {
       return res.status(404).send({ status: false, message: 'Category Not Found' });
     }

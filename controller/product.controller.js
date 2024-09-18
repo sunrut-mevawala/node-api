@@ -58,7 +58,7 @@ if(!proid){
     return res.status(400).send({ status: false, message: 'Product id is required' });
 }
 
-if (!reqBody.productTitle || !reqBody.productDescription || !reqBody.price || !reqBody.discountparcentage) {
+if (!reqBody.productTitle || !reqBody.productDescription || !reqBody.price || !reqBody.discountPercentage) {
     return res.status(400).send({ status: false, message: "Value can not be Empty" });
   }
 
@@ -67,7 +67,7 @@ if (!reqBody.productTitle || !reqBody.productDescription || !reqBody.price || !r
     productDescription: reqBody.productDescription,
     updatedDate: Date.now(),
     price: reqBody.price,
-    discountparcentage: reqBody.discountparcentage,
+    discountPercentage: reqBody.discountPercentage,
     // imageUrl: file ? file.filename : reqBody.imageUrl  
   };
 
@@ -97,14 +97,17 @@ exports.deleteProduct = async (req, res) => {
       if (!productDelete) {
         return res.status(404).send({ status: false, message: 'Prduct Not Found' });
       }
-      const filePath = 'images/'+productDelete.imageUrl;
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.error(`Error removing file: ${err}`);
-          return res.status(500).send({ status: false, message: err.message });
-        }
-        console.log(`File ${filePath} has been successfully removed.`);
-      });
+      productDelete.productImage.forEach((item) =>{
+        const filePath = 'images/'+item;
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error(`Error removing file: ${err}`);
+            return res.status(500).send({ status: false, message: err.message });
+          }
+          console.log(`File ${filePath} has been successfully removed.`);
+        });
+      })
+      
       return res.status(200).send({ status: true, message: 'Product deleted successfully' });
     } catch (err) {
       return res.status(500).send({ status: false, message: err.message });
